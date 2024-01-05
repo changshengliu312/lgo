@@ -10,6 +10,6 @@ http service frame golang cgi服务框架
    )
    
    func main() {
-    lgo2.Run(10168)
+    lgo.Run(10168)
    }  
 ```
