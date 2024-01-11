@@ -14,7 +14,7 @@ type Handler interface {
 	ServeHTTP(ctx *Context)
 }
 
-// WrapHandler MiddleWare For Wrap tgo.Handler To http.Handler
+// WrapHandler MiddleWare For Wrap lgo.Handler To http.Handler
 func WrapHandler(next Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
