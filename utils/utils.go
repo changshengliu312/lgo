@@ -1,3 +1,4 @@
+// Package utils 业务常用小函数，如获取当前IP，字符串操作等 magic 为黑魔法类，请在熟知原理的情况下使用，否则有不可预知的bug
 package utils
 
 import (
@@ -48,56 +49,41 @@ func AddrtoI(addr string) uint32 {
 	return IPtoI(ip)
 }
 
-// GetIP get local ip from inteface name like eth1
-func GetIP(name string) uint32 {
+// GetIP get local ip from inteface name like eth1 return string
+func GetIP(name string) string {
 	ifaces, err := net.Interfaces()
 	if err != nil {
-		return 0
+		return ""
 	}
 
 	for _, v := range ifaces {
 		if v.Name == name {
 			addrs, err := v.Addrs()
 			if err != nil {
-				return 0
+				return ""
 			}
 
 			for _, addr := range addrs {
-				var ip net.IP
-				switch val := addr.(type) {
-				case *net.IPNet:
-					ip = val.IP
-				case *net.IPAddr:
-					ip = val.IP
-				}
-
-				if len(ip) == 16 {
-					return binary.BigEndian.Uint32(ip[12:16])
-				} else if len(ip) == 4 {
-					return binary.BigEndian.Uint32(ip)
+				if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+					if ipNet.IP.To4() != nil {
+						fmt.Println(ipNet.IP.String())
+						return ipNet.IP.String()
+					}
 				}
 			}
 		}
 	}
-
-	return 0
+	return ""
 }
 
 // init 函数初始化
-var localIP uint32
-var littleEndianIP uint32
+var localIP string
 
 // GetLocalIP return local eth1 ip
-func GetLocalIP() uint32 {
+func GetLocalIP() string {
 	return localIP
-}
-
-// GetLittleEndianLocalIP return little endian local eth1 ip
-func GetLittleEndianLocalIP() uint32 {
-	return littleEndianIP
 }
 
 func init() {
 	localIP = GetIP("eth1")
-	littleEndianIP = ConvertEndian(localIP)
 }
