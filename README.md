@@ -23,10 +23,10 @@ http service frame golang cgi服务框架
    )
    
    func init() {
-    lgo.HandleFunc("/getAdLineDataAPI", AdLineInfo)
+    lgo.HandleFunc("/getLineDataAPI", getLineInfo)
   }
   
-  func AdLineInfo(ctx *lgo.Context) {
+  func getLineInfo(ctx *lgo.Context) {
    fmt.Println("adLineInfo")
   }
 ```
